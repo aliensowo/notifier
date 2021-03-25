@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
@@ -7,9 +8,11 @@ from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
-
+from django.utils.encoding import force_bytes, force_text
+from .tokens import account_activation_token
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.urls import reverse
+from django.core.mail import EmailMessage
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.views.generic.edit import FormView
@@ -18,7 +21,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-
+from . import models
 from . import forms
 
 
@@ -60,11 +63,49 @@ class SigninView(TemplateView):
             if form.is_valid():
                 user = form.save()
                 login(request, user)
-                messages.success(request, "Registration successful.")
+
+                current_site = get_current_site(request)
+                mail_subject = 'Activate your account.'
+                message = render_to_string('main/account/confirm_mail.txt', {
+                    'user': user,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                })
+                to_email = form.cleaned_data.get('email')
+                email = EmailMessage(
+                    mail_subject, message, to=[to_email]
+                )
+                email.send()
+
+                messages.success(request, "Registration successful. Please confirm your email address to complete the registration")
                 return redirect("service_app:personal_page")
             messages.error(request, "Unsuccessful registration. Invalid information.")
         form = forms.NewUserForm
         return render(request=request, template_name=self.template_name, context={"register_form": form})
+
+
+class ConfirmEmail(TemplateView):
+
+    def dispatch(self, request, uidb64, token, *args, **kwargs):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            typeUser = models.TypeUser.objects.get(user_id=user.id)
+            typeUser.confirmation_email = True
+            typeUser.save()
+            # login(request, user)
+            # return redirect('home')
+            messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
+            return redirect('service_app:personal_page')
+        else:
+            messages.error(request, 'Activation link is invalid!')
+            return redirect('service_app:personal_page')
 
 
 class PersonalView(TemplateView):

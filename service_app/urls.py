@@ -26,4 +26,6 @@ urlpatterns = [
     path('personal', views.PersonalView.as_view(), name='personal_page'),
     path('privacy', views.PrivacyView.as_view(), name='privacy_page'),
     path("password_reset", views.PasswordReset.as_view(), name="password_reset"),
+    path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+         views.ConfirmEmail.as_view(), name='activate'),
 ]

@@ -17,18 +17,18 @@ class NewUserForm(UserCreationForm):
     def save(self, commit=True):
         user = super(NewUserForm, self).save(commit=False)
         user.email = self.cleaned_data['email']
-        more = models.TypeUser.objects.create(
-            confirmation_email=False,
-            api_key='',
-            user_id=user.id,
-            phone=self.cleaned_data['phone']
-        )
+
         if commit:
             user.save()
+
+            newUser = User.objects.get(email=self.cleaned_data['email'])
+            more = models.TypeUser(
+                user_id=newUser.id,
+                phone=self.cleaned_data['phone']
+            )
+            more.save()
         return user
 
-    def send_mail(self):
 
-        SUBJECT = 'NOTIFIER: Уведомление!'
-        TEXT_MESASGE = 'Уважаемый {}, Вам пришло личное сообщение от заказчика. '.format(self.email)
-        send_mail(SUBJECT, TEXT_MESASGE, settings.EMAIL_HOST_USER, [self.email])
+
+

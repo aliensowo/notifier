@@ -6,12 +6,12 @@ class TypeUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.BigIntegerField(name='phone', verbose_name='Телефон')
     confirmation_email = models.BooleanField(
-        name='confirmation email',
-        verbose_name='Подтыежденный пользователь',
+        name='confirmation_email',
+        verbose_name='Подтвежденный пользователь',
         default=False
     )
     api_key = models.CharField(
-        name='api key',
+        name='api_key',
         verbose_name='API Key',
         max_length=256,
         blank=True

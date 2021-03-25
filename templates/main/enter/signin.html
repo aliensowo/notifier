@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% load static %}
+<section class="form-login">
+    <div class="container center">
+        <form class="sign" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="sign-form" type="submit">Далее</button>
 
-</body>
-</html>
+            <div class="signin-descr sign-form">
+                <p>Нажимая кнопку "Далее" вы соглашаетесь с <a href="{% url 'service_app:privacy_page' %}">пользовательским соглашением</a>
+                    и даете согласие на получение информационной рассылки</p>
+            </div>
+        </form>
+    </div>
+</section>

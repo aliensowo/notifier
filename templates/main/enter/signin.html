@@ -1,15 +1,15 @@
 {% load static %}
-<section class="form-login">
-    <div class="container center">
-        <form class="sign" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="sign-form" type="submit">Далее</button>
+{% load crispy_forms_tags %}
 
-            <div class="signin-descr sign-form">
-                <p>Нажимая кнопку "Далее" вы соглашаетесь с <a href="{% url 'service_app:privacy_page' %}">пользовательским соглашением</a>
-                    и даете согласие на получение информационной рассылки</p>
-            </div>
+<section class="form-login">
+
+    <div class="container py-5">
+        <h1>Register</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ register_form|crispy }}
+            <button class="btn btn-primary" type="submit">Register</button>
         </form>
     </div>
+
 </section>

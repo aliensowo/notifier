@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}NOTIFIER - Вход{% endblock %}
 
-</body>
-</html>
+{% block content %}
+
+    {% include 'main/personal_page_parts/email_bar.html' %}
+
+    {% include 'main/personal_page_parts/api_key.html' %}
+
+{% endblock %}

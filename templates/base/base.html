@@ -8,7 +8,6 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
-    {#    <link rel="stylesheet" href="{% static 'dev/css/style.css' %}">#}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
     <title>{% block title %}NOTIFIER - Главная{% endblock %}</title>
@@ -16,6 +15,8 @@
 <body>
 {#header#}
 {% include 'base/header.html' %}
+
+{% include 'base/message.html' %}
 
 {% block content %}{% endblock %}
 

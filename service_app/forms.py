@@ -1,43 +1,28 @@
 from django import forms
+from django.conf import settings
+from django.core.mail import send_mail
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from . import models
 
 
-class LoginForm(forms.Form):
-    username = forms.CharField(label='', max_length=16, widget=forms.TextInput(attrs={
-        'class': 'login__input',
-        'name': 'username',
-        'placeholder': 'Имя пользователя',
-    }))
-    password = forms.CharField(max_length=100,
-                               label='',
-                               widget=forms.PasswordInput(attrs={
-                                   'class': 'login__input',
-                                   'name': 'password',
-                                   'placeholder': 'Пароль',
-                               }))
+class NewUserForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    phone = forms.IntegerField()
 
+    class Meta:
+        model = User
+        fields = ("username", "email", "phone", "password1", "password2")
 
-class SigninForm(forms.Form):
-    username = forms.CharField(label='', max_length=16, widget=forms.TextInput(attrs={
-        'class': 'signin__input',
-        'name': 'username',
-        'placeholder': 'Имя пользователя',
-    }))
-    email = forms.EmailField(label='', max_length=120, widget=forms.EmailInput(attrs={
-        'class': 'signin__input',
-        'name': 'email',
-        'placeholder': 'e-mail',
-    }))
-    password = forms.CharField(max_length=100,
-                               label='',
-                               widget=forms.PasswordInput(attrs={
-                                   'class': 'signin__input',
-                                   'name': 'password',
-                                   'placeholder': 'Пароль',
-                               }))
-    password2 = forms.CharField(max_length=100,
-                                label='',
-                                widget=forms.PasswordInput(attrs={
-                                    'class': 'signin__input',
-                                    'name': 'password2',
-                                    'placeholder': 'Повтор пароля',
-                                }))
+    def save(self, commit=True):
+        user = super(NewUserForm, self).save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+        return user
+
+    def send_mail(self):
+
+        SUBJECT = 'NOTIFIER: Уведомление!'
+        TEXT_MESASGE = 'Уважаемый {}, Вам пришло личное сообщение от заказчика. '.format(self.email)
+        send_mail(SUBJECT, TEXT_MESASGE, settings.EMAIL_HOST_USER, [self.email])

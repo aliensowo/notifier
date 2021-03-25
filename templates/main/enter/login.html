@@ -1,14 +1,16 @@
 {% load static %}
-<section class="form-login">
-    <div class="container center">
+{% load crispy_forms_tags %}
 
-        <form method="post">
+<section class="form-login">
+
+    <div class="container py-5">
+        <h1>Login</h1>
+        <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
-            <div class="forgot-link">
-                <a href="">Забыли пароль?</a>
-            </div>
-            <button type="submit">Далее</button>
+            {{ login_form|crispy }}
+            <button class="btn btn-primary" type="submit">Login</button>
+            <a href="">Forgot pass</a>
         </form>
     </div>
+
 </section>

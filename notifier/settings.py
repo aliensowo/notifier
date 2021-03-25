@@ -26,8 +26,15 @@ DEBUG = True
 # SECURITY WARNING: keep the secret key used in production secret!
 if DEBUG:
     SECRET_KEY = 'snhyir&@fcv!4$g%n(a=kw6ajmjvz3z&e#wi%o83kv$4f@t9+7'
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'mails')
 else:
     SECRET_KEY = os.getenv('SECRET_KEY')
+    EMAIL_USE_TLS = True
+    EMAIL_HOST = 'smtp.yandex.ru'
+    EMAIL_PORT = '587'
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 
 ALLOWED_HOSTS = []
@@ -139,8 +146,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'mails')
+
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
 

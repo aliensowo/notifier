@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.urls import path
 from . import views
 
@@ -23,7 +23,7 @@ urlpatterns = [
     path('', views.LoginView.as_view(), name='login_page'),
     path('signin', views.SigninView.as_view(), name='signin_page'),
     path('logout', views.LogoutView.as_view(), name='logout_apge'),
-    path('personal', views.PersonalView.as_view(), name='personal_page'),
+    path('personal', login_required(views.PersonalView.as_view(), login_url='/'), name='personal_page'),
     path('privacy', views.PrivacyView.as_view(), name='privacy_page'),
     path("password_reset", views.PasswordReset.as_view(), name="password_reset"),
     path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',

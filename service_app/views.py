@@ -112,7 +112,17 @@ class PersonalView(TemplateView):
     template_name = 'main/personal_page.html'
 
     def dispatch(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        context = {}
+        if self.request.user:
+            person = User.objects.get(username=self.request.user)
+            if person.is_superuser or person.is_staff:
+                return redirect('admin:index')
+        user = User.objects.get(username=str(self.request.user))
+        typeUser = models.TypeUser.objects.get(user_id=user.id)
+        context['user'] = user
+        context['type_user'] = typeUser
+
+        return render(request, self.template_name, context)
 
 
 class PrivacyView(TemplateView):

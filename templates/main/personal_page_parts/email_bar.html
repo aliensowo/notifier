@@ -1,4 +1,11 @@
 {% load static %}
-<section>
-    e-mail bar
-</section>
+{% if not type_user.confirmation_email %}
+<div class="container-fluid p-0">
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    Please comfirm your E-mail
+  </div>
+</div>
+{% endif %}

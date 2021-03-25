@@ -25,4 +25,5 @@ urlpatterns = [
     path('logout', views.LogoutView.as_view(), name='logout_apge'),
     path('personal', views.PersonalView.as_view(), name='personal_page'),
     path('privacy', views.PrivacyView.as_view(), name='privacy_page'),
+    path("password_reset", views.PasswordReset.as_view(), name="password_reset"),
 ]

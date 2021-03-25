@@ -17,6 +17,12 @@ class NewUserForm(UserCreationForm):
     def save(self, commit=True):
         user = super(NewUserForm, self).save(commit=False)
         user.email = self.cleaned_data['email']
+        more = models.TypeUser.objects.create(
+            confirmation_email=False,
+            api_key='',
+            user_id=user.id,
+            phone=self.cleaned_data['phone']
+        )
         if commit:
             user.save()
         return user

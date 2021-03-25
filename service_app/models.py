@@ -14,6 +14,7 @@ class TypeUser(models.Model):
         name='api key',
         verbose_name='API Key',
         max_length=256,
+        blank=True
     )
 
     class Meta:

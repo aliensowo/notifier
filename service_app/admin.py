@@ -23,3 +23,7 @@ class UserAdmin(admin.ModelAdmin):
     # )
     # search_fields = ('email', 'username',)
     # ordering = ('username',)
+
+
+
+admin.site.register(models.ApiRequestsHistory)

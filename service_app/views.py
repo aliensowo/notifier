@@ -182,11 +182,36 @@ class ApiMethod(TemplateView):
 
     def dispatch(self, request, token, *args, **kwargs):
         context = {}
+        data = {}
+
+        data['addr'] = self.get_client_ip()
+        data['api_key'] = token
+
         try:
             typeUser = models.TypeUser.objects.get(api_key=token)
             user = User.objects.get(id=typeUser.user_id)
             context['email'] = user.email
             context['username'] = user.username
+
+            data['response'] = context
+            data['owner_api_key_id'] = typeUser
+            data['status'] = True
+
+            history_add = models.ApiRequestsHistory(**data)
+            history_add.save()
+
             return HttpResponse('{}'.format(context), status=200)
         except models.TypeUser.DoesNotExist:
+
+            history_add = models.ApiRequestsHistory(**data)
+            history_add.save()
+
             return HttpResponse('None', status=404)
+
+    def get_client_ip(self):
+        x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = self.request.META.get('REMOTE_ADDR')
+        return ip

@@ -13,7 +13,9 @@ class NewUserForm(UserCreationForm):
     Форма создания нового пользователя
     """
     email = forms.EmailField(required=True)
-    phone = PhoneNumberField()
+    phone = PhoneNumberField(widget=forms.TextInput(attrs={
+        'value': '+7'
+    }))
 
     class Meta:
         model = User

@@ -12,6 +12,26 @@
     <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
     <title>{% block title %}NOTIFIER - Главная{% endblock %}</title>
 </head>
+<style>
+    html {
+        position: relative;
+        min-height: 100%;
+    }
+
+    body {
+        /* Margin bottom by footer height */
+        margin-bottom: 60px;
+    }
+
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        /* Set the fixed height of the footer here */
+        height: 60px;
+        background-color: #f5f5f5;
+    }
+</style>
 <body>
 {#header#}
 {% include 'base/header.html' %}

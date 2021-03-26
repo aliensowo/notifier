@@ -1,30 +1,33 @@
 {% load static %}
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
-                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav mr-auto">
-                {% if user.is_authenticated %}
+<div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
 
+        <a class="navbar-brand" href="/">
+            Test Project
+        </a>
+
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        </ul>
+
+        <div class="col-md-3 text-end">
+            {% if user.is_authenticated %}
+                <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'service_app:logout_apge' %}">Logout</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Welcome, {{ user.username }}</a>
                     </li>
+                </ul>
 
-                {% else %}
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'service_app:login_page' %}">Login</a>
-                    </li>
-
-                {% endif %}
-            </ul>
+            {% else %}
+                <button type="button" class="btn btn-outline-primary me-2"><a class="nav-link" href="{% url 'service_app:login_page' %}">Login</a></button>
+                <button type="button" class="btn btn-primary"><a class="nav-link" href="{% url 'service_app:signin_page' %}" style="color: white">Sign-up</a></button>
+            {% endif %}
         </div>
-    </nav>
-</header>
+
+    </header>
+</div>
+
+
+

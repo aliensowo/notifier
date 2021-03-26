@@ -31,6 +31,8 @@ if DEBUG:
     EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'mails')
 
     GOOGLE_RECAPTCHA_SECRET_KEY = '6LdbWY8aAAAAANymLlscXb7_eYyN0gbe4oOnCuB2'
+
+    ALLOWED_HOSTS = []
 else:
     SECRET_KEY = os.getenv('SECRET_KEY')
 
@@ -42,8 +44,7 @@ else:
 
     GOOGLE_RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_SECRET_KEY')
 
-
-ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['www.domain.com']
 
 
 # Application definition

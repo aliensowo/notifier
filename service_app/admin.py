@@ -10,7 +10,7 @@ class UserAdmin(admin.ModelAdmin):
     # list_filter = ('confirmation_email',)
     fieldsets = (
         ('Инфорамция о пользователе', {
-            'fields': ('confirmation_email', )
+            'fields': ('user', 'confirmation_email', )
         }),
 
     )

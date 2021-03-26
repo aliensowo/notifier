@@ -61,26 +61,27 @@ class SigninView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         if request.method == "POST":
             form = forms.NewUserForm(request.POST)
-            if form.is_valid():
-                user = form.save()
-                login(request, user)
+            if self.request.recaptcha_is_valid:
+                if form.is_valid():
+                    user = form.save()
+                    login(request, user)
 
-                current_site = get_current_site(request)
-                mail_subject = 'Activate your account.'
-                message = render_to_string('main/account/confirm_mail.txt', {
-                    'user': user,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': account_activation_token.make_token(user),
-                })
-                to_email = form.cleaned_data.get('email')
-                email = EmailMessage(
-                    mail_subject, message, to=[to_email]
-                )
-                email.send()
+                    current_site = get_current_site(request)
+                    mail_subject = 'Activate your account.'
+                    message = render_to_string('main/account/confirm_mail.txt', {
+                        'user': user,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'token': account_activation_token.make_token(user),
+                    })
+                    to_email = form.cleaned_data.get('email')
+                    email = EmailMessage(
+                        mail_subject, message, to=[to_email]
+                    )
+                    email.send()
 
-                messages.success(request, "Registration successful. Please confirm your email address to complete the registration")
-                return redirect("service_app:personal_page")
+                    messages.success(request, "Registration successful. Please confirm your email address to complete the registration")
+                    return redirect("service_app:personal_page")
             messages.error(request, "Unsuccessful registration. Invalid information.")
         form = forms.NewUserForm
         return render(request=request, template_name=self.template_name, context={"register_form": form})

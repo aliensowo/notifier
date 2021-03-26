@@ -15,13 +15,14 @@ Including another URLconf
 """
 from django.contrib.auth.decorators import login_required
 from django.urls import path
+from .decorators import check_recaptcha
 from . import views
 
 app_name = 'service_app'
 
 urlpatterns = [
     path('', views.LoginView.as_view(), name='login_page'),
-    path('signin', views.SigninView.as_view(), name='signin_page'),
+    path('signin', check_recaptcha(views.SigninView.as_view()), name='signin_page'),
     path('logout', views.LogoutView.as_view(), name='logout_apge'),
     path('personal', login_required(views.PersonalView.as_view(), login_url='/'), name='personal_page'),
     path('privacy', views.PrivacyView.as_view(), name='privacy_page'),

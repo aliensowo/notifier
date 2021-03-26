@@ -29,4 +29,5 @@ urlpatterns = [
     path("password_reset", views.PasswordReset.as_view(), name="password_reset"),
     path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
          views.ConfirmEmail.as_view(), name='activate'),
+    path('api/<token>', views.ApiMethod.as_view(), name='api_method'),
 ]

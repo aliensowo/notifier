@@ -22,6 +22,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+import uuid
 from . import models
 from . import forms
 
@@ -124,6 +125,14 @@ class PersonalView(TemplateView):
         typeUser = models.TypeUser.objects.get(user_id=user.id)
         context['user'] = user
         context['type_user'] = typeUser
+        if typeUser.api_key is not None:
+            context['value_key'] = typeUser.api_key
+        if request.method == 'POST':
+            api_key = uuid.uuid4()
+            context['value_key'] = api_key
+            typeUser.api_key = api_key
+            typeUser.save()
+            return redirect('service_app:personal_page')
 
         return render(request, self.template_name, context)
 
@@ -167,3 +176,14 @@ class PasswordReset(TemplateView):
         password_reset_form = PasswordResetForm()
         return render(request=request, template_name=self.template_name,
                       context={"password_reset_form": password_reset_form})
+
+
+class ApiMethod(TemplateView):
+
+    def dispatch(self, request, token, *args, **kwargs):
+        context = {}
+        typeUser = models.TypeUser.objects.get(api_key=token)
+        user = User.objects.get(id=typeUser.user_id)
+        context['email'] = user.email
+        context['username'] = user.username
+        return HttpResponse('{}'.format(context))

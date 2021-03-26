@@ -1,14 +1,16 @@
 from django import forms
 from django.conf import settings
 from django.core.mail import send_mail
+from phonenumber_field.formfields import PhoneNumberField
 from django.contrib.auth.forms import UserCreationForm
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 from . import models
 
 
 class NewUserForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    phone = forms.IntegerField()
+    phone = PhoneNumberField()
 
     class Meta:
         model = User

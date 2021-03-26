@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class TypeUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.BigIntegerField(name='phone', verbose_name='Телефон', unique=True)
+    phone = PhoneNumberField(name='phone', verbose_name='Телефон', unique=True)
     confirmation_email = models.BooleanField(
         name='confirmation_email',
         verbose_name='Подтвежденный пользователь',
@@ -14,7 +15,8 @@ class TypeUser(models.Model):
         name='api_key',
         verbose_name='API Key',
         max_length=256,
-        blank=True
+        blank=True,
+        null=True
     )
 
     class Meta:

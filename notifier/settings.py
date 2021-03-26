@@ -62,6 +62,7 @@ INSTALLED_APPS = [
 
     # 3d part app
     'crispy_forms',
+    'phonenumber_field',
 
 ]
 

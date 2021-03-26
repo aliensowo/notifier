@@ -182,8 +182,11 @@ class ApiMethod(TemplateView):
 
     def dispatch(self, request, token, *args, **kwargs):
         context = {}
-        typeUser = models.TypeUser.objects.get(api_key=token)
-        user = User.objects.get(id=typeUser.user_id)
-        context['email'] = user.email
-        context['username'] = user.username
-        return HttpResponse('{}'.format(context))
+        try:
+            typeUser = models.TypeUser.objects.get(api_key=token)
+            user = User.objects.get(id=typeUser.user_id)
+            context['email'] = user.email
+            context['username'] = user.username
+            return HttpResponse('{}'.format(context), status=200)
+        except models.TypeUser.DoesNotExist:
+            return HttpResponse('None', status=404)

@@ -5,6 +5,13 @@ import requests
 
 
 def check_recaptcha(function):
+    """
+    Функция-декоратор для проверки рекапчи
+        1. Из запроса получаем информацию об ответе о валидации каптчи
+        2. Отправляем запрос на сервер Google для верификации сайта и получения окончательного результата валидации
+    :param function:
+    :return:
+    """
     def wrap(request, *args, **kwargs):
         request.recaptcha_is_valid = None
         if request.method == 'POST':

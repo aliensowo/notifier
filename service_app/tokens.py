@@ -3,6 +3,9 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 class TokenGenerator(PasswordResetTokenGenerator):
+    """
+    геренератор токена для подтверждения почты
+    """
     def _make_hash_value(self, user, timestamp):
         return (
             six.text_type(user.pk) + six.text_type(timestamp) +

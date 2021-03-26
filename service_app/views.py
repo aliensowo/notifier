@@ -28,6 +28,9 @@ from . import forms
 
 
 class LogoutView(TemplateView):
+    """
+    Class based view для логаута пользователя
+    """
 
     def dispatch(self, request, *args, **kwargs):
         logout(request)
@@ -35,9 +38,21 @@ class LogoutView(TemplateView):
 
 
 class LoginView(TemplateView):
+    """
+    Class based view для логина пользователя
+    """
+
     template_name = "main/login_page.html"
 
     def dispatch(self, request, *args, **kwargs):
+        """
+        Функция обработки запросов со страницы логина
+        Получаем post запрос с формы на странице и производим логин пользователя
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         if request.method == "POST":
             form = AuthenticationForm(request, data=request.POST)
             if form.is_valid():
@@ -57,9 +72,24 @@ class LoginView(TemplateView):
 
 
 class SigninView(TemplateView):
+    """
+    Class based view для регистрации пользователя
+    """
+
     template_name = "main/signin_page.html"
 
     def dispatch(self, request, *args, **kwargs):
+        """
+        Функция обработки запросов со страницы регистрации
+
+        Принимая форму:
+            1. Валидация капчи
+            2. Валидация данных пользователя + валидация екстар атрибутов пользователя
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         if request.method == "POST":
             form = forms.NewUserForm(request.POST)
             if self.request.recaptcha_is_valid:
@@ -89,8 +119,23 @@ class SigninView(TemplateView):
 
 
 class ConfirmEmail(TemplateView):
+    """
+    Class based view для подтверждения e-mail пользователя
+    """
 
     def dispatch(self, request, uidb64, token, *args, **kwargs):
+        """
+        Функция обработки запроса по адресу подтверждения почты пользователя
+
+        Происходит обработка get парметров, которые генерируются при отправке сообщения и состовляют ссылку подтверждения
+        При успешной попыткой меняем статус подтверждения почты в моделе пользователя
+        :param request:
+        :param uidb64:
+        :param token:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
@@ -112,10 +157,25 @@ class ConfirmEmail(TemplateView):
 
 
 class PersonalView(TemplateView):
+    """
+    Class based view страницы пользователя (доступна только авторизированным пользователям)
+    """
+
     template_name = 'main/personal_page.html'
     login_url = '/'
 
     def dispatch(self, request, *args, **kwargs):
+        """
+        Функция обработки страницы
+        логика:
+            1. отобразить api ключ
+            2. сгенерировать ключ
+            3. обновить существующий ключ
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         context = {}
         if self.request.user:
             person = User.objects.get(username=self.request.user)
@@ -138,17 +198,42 @@ class PersonalView(TemplateView):
 
 
 class PrivacyView(TemplateView):
+    """
+    Class based view страницы политики кофиденциальности
+    """
     template_name = 'main/privacy_page.html'
 
     def dispatch(self, request, *args, **kwargs):
+        """
+        рендр страницы
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         return render(request, self.template_name)
 
 
 class PasswordReset(TemplateView):
+    """
+    Class based view сброса пароля
+    """
 
     template_name = 'main/account/password_reset.html'
 
     def dispatch(self, request, *args, **kwargs):
+        """
+        Функция сброса пароля
+        ЛогикаЖ
+            1. принимаем и валидируем форму\
+            2. находим пользователя по email из формы
+            3. генерируем письмо со сслыкой для сброса пароля
+            4. отправляем письмо
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         if request.method == "POST":
             password_reset_form = PasswordResetForm(request.POST)
             if password_reset_form.is_valid():
@@ -179,8 +264,27 @@ class PasswordReset(TemplateView):
 
 
 class ApiMethod(TemplateView):
+    """
+    Class based view предложенного апи метода
+    """
 
     def dispatch(self, request, token, *args, **kwargs):
+        """
+        Логика:
+            получаем IP с которого обращаются
+            получаем токен по которому обращаюстя
+
+            ищем токен в БД
+                1. отображаем данные пользователя при успешном нахождении такого с 200 кодом ответа
+                    1.1 записываем в историю обращении всю информацию по запросу
+                2. отображем "None" с 404 кодом ответа
+                    2.1 записываем в историю обращений информацию о неудачном обращении
+        :param request:
+        :param token:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         context = {}
         data = {}
 
@@ -209,6 +313,10 @@ class ApiMethod(TemplateView):
             return HttpResponse('None', status=404)
 
     def get_client_ip(self):
+        """
+        Метод получения IP пользоввтеля
+        :return:
+        """
         x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
         if x_forwarded_for:
             ip = x_forwarded_for.split(',')[0]

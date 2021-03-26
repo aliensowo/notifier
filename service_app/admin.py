@@ -5,25 +5,33 @@ from . import models
 
 @admin.register(models.TypeUser)
 class UserAdmin(admin.ModelAdmin):
-    # list_display = ('user', 'confirmation_email', 'api_key')
+    """
+    Надстройка админ панели для модели пользователя
+    """
+    list_display = ('user', 'confirmation_email', 'api_key')
 
-    # list_filter = ('confirmation_email',)
+    list_filter = ('confirmation_email',)
+
     fieldsets = (
         ('Инфорамция о пользователе', {
             'fields': ('user', 'confirmation_email', )
         }),
 
     )
-    # list_filter = ('email', 'username', 'confirmation_email',)
-    # fieldsets = (
-    #     ('Инфорамция о пользователе',{
-    #         'fields': (('email', 'username',), 'phone',  'confirmation_email')
-    #     }),
-    #
-    # )
-    # search_fields = ('email', 'username',)
-    # ordering = ('username',)
+    search_fields = ('user', 'api_key',)
+    ordering = ('confirmation_email', 'user',)
 
 
+@admin.register(models.ApiRequestsHistory)
+class HistoryAdmin(admin.ModelAdmin):
+    """
+    Надстройка админ панели для модели истории обращений к API
+    """
 
-admin.site.register(models.ApiRequestsHistory)
+    list_display = ('addr', 'api_key', 'date_request', 'status')
+
+    list_filter = ('status', 'addr', 'owner_api_key_id', 'date_request')
+
+    search_fields = ('addr', 'api_key',)
+
+    ordering = ('date_request',)

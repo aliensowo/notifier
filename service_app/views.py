@@ -63,7 +63,7 @@ class SigninView(TemplateView):
         if request.method == "POST":
             form = forms.NewUserForm(request.POST)
             if self.request.recaptcha_is_valid:
-                if form.is_valid():
+                if form.is_valid() and form.cleaned_data:
                     user = form.save()
                     login(request, user)
 

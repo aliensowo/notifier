@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class TypeUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.BigIntegerField(name='phone', verbose_name='Телефон')
+    phone = models.BigIntegerField(name='phone', verbose_name='Телефон', unique=True)
     confirmation_email = models.BooleanField(
         name='confirmation_email',
         verbose_name='Подтвежденный пользователь',

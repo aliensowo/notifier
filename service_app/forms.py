@@ -14,6 +14,14 @@ class NewUserForm(UserCreationForm):
         model = User
         fields = ("username", "email", "phone", "password1", "password2")
 
+    def check_data(self):
+        try:
+            typeUser = models.TypeUser.objects.get(phone=self.cleaned_data['phone'])
+            msg = 'user with this phone number ({}) already exist'.format(typeUser.phone)
+            return False
+        except models.TypeUser.DoesNotExist:
+            return True
+
     def save(self, commit=True):
         user = super(NewUserForm, self).save(commit=False)
         user.email = self.cleaned_data['email']

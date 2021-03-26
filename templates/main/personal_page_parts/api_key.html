@@ -1,23 +1,29 @@
 {% load static %}
 <section>
-    <form action="" method="post">
-        {% csrf_token %}
-        {% if value_key %}
-            <label for="">
-                <span>You API KEY</span>
-                <input id="api_key" type="text" value="{{ value_key }}" disabled="disabled">
-            </label>
+    <div class="container">
+        <form action="" method="post">
+            {% csrf_token %}
+            {% if value_key %}
+                <label for="">
+                    <span>You API KEY</span>
+                    <input id="api_key" type="text" value="{{ value_key }}" disabled="disabled">
+                </label>
 
-            <p><button type="submit">Update your key</button></p>
-        {% else %}
-            <label for="">
-                <span>You API KEY</span>
-                <input type="text" placeholder="create your first api key" disabled="disabled">
-            </label>
-            <p><button type="submit">Generate key</button></p>
-        {% endif %}
-    </form>
-<button onclick="apiCopy()">Copy Key to Clipboard</button>
+                <p>
+                    <button type="submit">Update your key</button>
+                </p>
+            {% else %}
+                <label for="">
+                    <span>You API KEY</span>
+                    <input type="text" placeholder="create your first api key" disabled="disabled">
+                </label>
+                <p>
+                    <button type="submit">Generate key</button>
+                </p>
+            {% endif %}
+        </form>
+        <button onclick="apiCopy()">Copy Key to Clipboard</button>
+    </div>
 </section>
 
 <script>
